@@ -17,21 +17,25 @@ public class Destination : MonoBehaviour {
     public GameObject choice2;
     public GameObject choice3;
 
+    public Button thisButton;
+    public Button[] possibleNext;
+
 
     public void SetUp()
     {
+        if(!GetComponent<MapNode>().isFirst)
+        {
+            FindObjectOfType<ResultDisplay>().HideOldButton(true);
+        }
+        FindObjectOfType<MapEditor>().HideMap();
         headline.GetComponentInChildren<Text>().text = destinationName;
         destinationPanel.SetActive(true);
+
 
         choice1.GetComponentInChildren<Text>().text = choice1.GetComponent<ChoiceAlpha>().choiceTitle;
         choice2.GetComponentInChildren<Text>().text = choice2.GetComponent<ChoiceAlpha>().choiceTitle;
         choice3.GetComponentInChildren<Text>().text = choice3.GetComponent<ChoiceAlpha>().choiceTitle;
-    }
 
-    public void ResetCanvas()
-    {
-        FindObjectOfType<ResultDisplay>().resultPanel.SetActive(false);
-        SetUp();
+        FindObjectOfType<ResultDisplay>().LastClicked(GetComponent<Button>());
     }
-
 }

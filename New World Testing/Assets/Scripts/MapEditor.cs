@@ -13,6 +13,7 @@ public class MapEditor : MonoBehaviour {
 
     private bool hasRiver;
     private bool hasCliff;
+
     public Destination wastelandScript;
     public Destination hillScript;
     public Destination abandonedScript;
@@ -23,7 +24,7 @@ public class MapEditor : MonoBehaviour {
     public Destination riverScript;
     public Destination fordScript;
 
-
+    public Button lastClicked;
 
 	// Use this for initialization
 	void Start ()
@@ -32,11 +33,6 @@ public class MapEditor : MonoBehaviour {
         hasCliff = (cliff.Length != 0);
 
         SetUpMap();
-        for (int i = 0; i <wasteland.Length; i++)
-        {
-            
-            
-        }
 	}
 	
 	// Update is called once per frame
@@ -46,7 +42,6 @@ public class MapEditor : MonoBehaviour {
 
     private void SetUpMap()
     {
-        int rand = Random.Range(0, 3);
         for (int i = 0; i < wasteland.Length; i++)
         {
             wasteland[i].GetComponentInChildren<Destination>().destinationName = wastelandScript.destinationName;
@@ -58,9 +53,14 @@ public class MapEditor : MonoBehaviour {
             wasteland[i].GetComponentInChildren<Destination>().choice2 = wastelandScript.choice2;
             wasteland[i].GetComponentInChildren<Destination>().choice3 = wastelandScript.choice3;
 
+            wasteland[i].GetComponentInChildren<Destination>().thisButton = wasteland[i];
+            wasteland[i].GetComponentInChildren<Destination>().possibleNext = wasteland[i].GetComponentInChildren<MapNode>().next;
+
             wasteland[i].GetComponentInChildren<Text>().text = wastelandScript.destinationName;
+            wasteland[i].name = "Wasteland0" + (i+1).ToString();
         }
 
+        int rand = Random.Range(0, 3);
         for (int i = 0; i < other.Length; i++)
         {
             if(rand == 0)
@@ -74,7 +74,11 @@ public class MapEditor : MonoBehaviour {
                 other[i].GetComponentInChildren<Destination>().choice2 = hillScript.choice2;
                 other[i].GetComponentInChildren<Destination>().choice3 = hillScript.choice3;
 
+                other[i].GetComponentInChildren<Destination>().thisButton = other[i];
+                other[i].GetComponentInChildren<Destination>().possibleNext = other[i].GetComponentInChildren<MapNode>().next;
+
                 other[i].GetComponentInChildren<Text>().text = hillScript.destinationName;
+                other[i].name = "Hill0" + (i + 1).ToString();
             }
 
             if (rand == 1)
@@ -88,7 +92,11 @@ public class MapEditor : MonoBehaviour {
                 other[i].GetComponentInChildren<Destination>().choice2 = abandonedScript.choice2;
                 other[i].GetComponentInChildren<Destination>().choice3 = abandonedScript.choice3;
 
+                other[i].GetComponentInChildren<Destination>().thisButton = other[i];
+                other[i].GetComponentInChildren<Destination>().possibleNext = other[i].GetComponentInChildren<MapNode>().next;
+
                 other[i].GetComponentInChildren<Text>().text = abandonedScript.destinationName;
+                other[i].name = "Abandoned0" + (i + 1).ToString();
             }
 
             if (rand == 2)
@@ -102,7 +110,11 @@ public class MapEditor : MonoBehaviour {
                 other[i].GetComponentInChildren<Destination>().choice2 = mountainScript.choice2;
                 other[i].GetComponentInChildren<Destination>().choice3 = mountainScript.choice3;
 
+                other[i].GetComponentInChildren<Destination>().thisButton = other[i];
+                other[i].GetComponentInChildren<Destination>().possibleNext = other[i].GetComponentInChildren<MapNode>().next;
+
                 other[i].GetComponentInChildren<Text>().text = mountainScript.destinationName;
+                other[i].name = "Mountain0" + (i + 1).ToString();
             }
 
             if (rand == 3)
@@ -116,7 +128,11 @@ public class MapEditor : MonoBehaviour {
                 other[i].GetComponentInChildren<Destination>().choice2 = woodedScript.choice2;
                 other[i].GetComponentInChildren<Destination>().choice3 = woodedScript.choice3;
 
+                other[i].GetComponentInChildren<Destination>().thisButton = other[i];
+                other[i].GetComponentInChildren<Destination>().possibleNext = other[i].GetComponentInChildren<MapNode>().next;
+
                 other[i].GetComponentInChildren<Text>().text = woodedScript.destinationName;
+                other[i].name = "Wood0" + (i + 1).ToString();
             }
 
             rand = Random.Range(0, 3);
@@ -135,7 +151,11 @@ public class MapEditor : MonoBehaviour {
                 river[i].GetComponentInChildren<Destination>().choice2 = riverScript.choice2;
                 river[i].GetComponentInChildren<Destination>().choice3 = riverScript.choice3;
 
+                river[i].GetComponentInChildren<Destination>().thisButton = river[i];
+                river[i].GetComponentInChildren<Destination>().possibleNext = river[i].GetComponentInChildren<MapNode>().next;
+
                 river[i].GetComponentInChildren<Text>().text = riverScript.destinationName;
+                river[i].name = "River0" + (i + 1).ToString();
             }
 
             for (int i = 0; i < ford.Length; i++)
@@ -149,7 +169,11 @@ public class MapEditor : MonoBehaviour {
                 ford[i].GetComponentInChildren<Destination>().choice2 = fordScript.choice2;
                 ford[i].GetComponentInChildren<Destination>().choice3 = fordScript.choice3;
 
+                ford[i].GetComponentInChildren<Destination>().thisButton = ford[i];
+                ford[i].GetComponentInChildren<Destination>().possibleNext = ford[i].GetComponentInChildren<MapNode>().next;
+
                 ford[i].GetComponentInChildren<Text>().text = fordScript.destinationName;
+                ford[i].name = "Ford0" + (i + 1).ToString();
             }
         }
 
@@ -166,18 +190,26 @@ public class MapEditor : MonoBehaviour {
                 cliff[i].GetComponentInChildren<Destination>().choice2 = cliffScript.choice2;
                 cliff[i].GetComponentInChildren<Destination>().choice3 = cliffScript.choice3;
 
+                cliff[i].GetComponentInChildren<Destination>().thisButton = cliff[i];
+                cliff[i].GetComponentInChildren<Destination>().possibleNext = cliff[i].GetComponentInChildren<MapNode>().next;
+
                 cliff[i].GetComponentInChildren<Text>().text = cliffScript.destinationName;
+                cliff[i].name = "Cliff0" + (i + 1).ToString();
             }
         }
     }
-
-    public void PossiblePath(Button currentLocation)
+    public void HideMap()
     {
-        for (int i = 0; i < cliff.Length; i++)
-        {
-            string thisName = "";
-            thisName = currentLocation.GetComponent<MapNode>().next[i].GetComponent<Destination>().destinationName;
-            Debug.Log(thisName);
-        }
+        gameObject.SetActive(false);
+    }
+
+    public void DisplayMap()
+    {
+        gameObject.SetActive(true);
+    }
+
+    public void LastClicked(Button button)
+    {
+        lastClicked = button;
     }
 }
