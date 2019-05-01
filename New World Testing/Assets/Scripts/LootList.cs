@@ -7,12 +7,10 @@ public class LootList
 {
     public string name;
     public int amount;
-    public int coinsGained;
 
-    public LootList(string newName, int newAmount, int newCoinsGained)
+    public LootList(string newName, int newAmount)
     {
         name = newName;
         amount = newAmount;
-        coinsGained = newCoinsGained;
     }
 }

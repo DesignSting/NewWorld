@@ -11,70 +11,67 @@ public class ItemAlpha : MonoBehaviour {
     public List<ItemsList> m_eqippableItems = new List<ItemsList>();
     public List<ItemsList> m_useableItems = new List<ItemsList>();
 
-    public Text nutTotal;
+    public int coins;
 
-    public void Start()
+     public void UpdateItems(string name, int amount)
     {
-        nutTotal.text = m_ItemList[1].curHeld.ToString();
-    }
-
-    public void EqippableItems()
-    {
-        FindObjectOfType<InventoryDisplay>().EqippableItems(m_eqippableItems);
-    }
-
-    public void UpdateInventory(string name, int amount)
-    {
-        int itemNumber = 0;
-        int itemType = 0;
-        if(amount == 0)
+        bool isFound = false;
+        for(int i = 0; i < m_ItemList.Capacity; i++)
         {
-            for(int i = 0; i < m_eqippableItems.Capacity; i++)
+            if(name == m_ItemList[i].itemName)
             {
-                if(name == m_eqippableItems[i].itemName)
-                {
-                    m_eqippableItems[i].equipped = false;
-                    itemNumber = i;
-                    itemType = 1;
-                    FindObjectOfType<InventoryDisplay>().UpdateInventoryDisplay(m_eqippableItems[itemNumber], itemType);
-                    break;
-                }
+                m_ItemList[i].curHeld += amount;
+                isFound = true;
             }
+        }
+        if(!isFound)
+        {
             for (int i = 0; i < m_useableItems.Capacity; i++)
             {
-                Debug.Log(m_useableItems[i].itemName);
                 if (name == m_useableItems[i].itemName)
                 {
-                    itemNumber = i;
-                    itemType = 2;
-                    FindObjectOfType<InventoryDisplay>().UpdateInventoryDisplay(m_useableItems[itemNumber], itemType);
-                    break;
+                    m_useableItems[i].curHeld += amount;
+                    isFound = true;
                 }
             }
         }
-        else
-        {
-            for (int i = 0; i < m_ItemList.Capacity; i++)
-            {
-                if (name == m_ItemList[i].itemName)
-                {
-                    itemNumber = i;
-                    break;
-                }
-            }
-            FindObjectOfType<InventoryDisplay>().UpdateInventoryDisplay(m_ItemList[itemNumber], amount);
-        }
+        FindObjectOfType<InventoryDisplay>().UpdateItemsDisplay();
     }
-
 
     public string ReturnName(ItemsList itemsList)
     {
         return itemsList.ReturnName();
     }
 
-    public void Test()
+    public void AddCoins(int i)
     {
-        UpdateInventory("Small Backpack", 0);
+        coins += i;
     }
 
+    public void RemoveItem(string name, int amount)
+    {
+        for(int i = 0; i < m_useableItems.Capacity; i++)
+        {
+            if(m_useableItems[i].itemName == name)
+            {
+                m_useableItems[i].curHeld -= amount;
+                break;
+            }
+        }
+    }
+
+    public int ReturnCoins()
+    {
+        return coins;
+    }
+
+    public void SendCoins(int i)
+    {
+        coins += i;
+    }
+
+    public int ReturnRope()
+    {
+        return m_useableItems[6].curHeld;
+    }
 }

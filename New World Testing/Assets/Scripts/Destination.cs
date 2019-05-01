@@ -8,6 +8,7 @@ public class Destination : MonoBehaviour {
     public string destinationName;
     public Sprite uncovered;
     public Sprite covered;
+    public Image test;
 
     public GameObject destinationPanel;
 
@@ -27,6 +28,7 @@ public class Destination : MonoBehaviour {
         {
             FindObjectOfType<ResultDisplay>().HideOldButton(true);
         }
+        FindObjectOfType<ResultDisplay>().ResetPanel();
         FindObjectOfType<MapEditor>().HideMap();
         headline.GetComponentInChildren<Text>().text = destinationName;
         destinationPanel.SetActive(true);
@@ -37,5 +39,11 @@ public class Destination : MonoBehaviour {
         choice3.GetComponentInChildren<Text>().text = choice3.GetComponent<ChoiceAlpha>().choiceTitle;
 
         FindObjectOfType<ResultDisplay>().LastClicked(GetComponent<Button>());
+        Mask();
+    }
+
+    public void Mask()
+    {
+        
     }
 }

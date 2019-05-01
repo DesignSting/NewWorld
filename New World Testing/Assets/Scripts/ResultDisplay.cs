@@ -7,9 +7,14 @@ public class ResultDisplay : MonoBehaviour {
 
     public GameObject resultPanel;
     public Text storyBox;
+    public Text encounterBox;
     public Text positiveBox;
     public Text negativeBox;
     public Text lootBox;
+
+    public GameObject deathPanel;
+    public Text deathStoryBox;
+    public Text deathBox;
 
     public Button lastClicked;
     public Button nextButton;
@@ -24,6 +29,7 @@ public class ResultDisplay : MonoBehaviour {
     {
         panel.SetActive(false);
         storyBox.text = choice.textToDisplay;
+        resultPanel.SetActive(true);
         if (choice.badChoice)
         {
             BadResult(choice);
@@ -34,10 +40,9 @@ public class ResultDisplay : MonoBehaviour {
             GoodResult(choice);
         }
 
-        resultPanel.SetActive(true);
-        
-
+        FindObjectOfType<InventoryDisplay>().UpdateItemsDisplay();
     }
+
 
     private void GoodResult(ChoiceList choice)
     {
@@ -46,71 +51,111 @@ public class ResultDisplay : MonoBehaviour {
             positiveBox.text = "You recieved ";
             for (int i = 0; i < choice.loot.Capacity; i++)
             {
-                positiveBox.text += choice.loot[i].amount + " " + choice.loot[i].name;
-                FindObjectOfType<ItemAlpha>().UpdateInventory(choice.loot[i].name, choice.loot[i].amount);
-                if ((choice.loot.Capacity - i == 1))
+                if (choice.loot[i].name == "Coins" || choice.loot[i].name == "Gold")
                 {
-                    positiveBox.text += "!";
+                    positiveBox.text += choice.loot[i].amount + " gold pieces";
+                    FindObjectOfType<ItemAlpha>().AddCoins(choice.loot[i].amount);
                 }
                 else
                 {
-                    positiveBox.text += ", ";
+                    positiveBox.text += choice.loot[i].amount + " " + choice.loot[i].name;
+                    FindObjectOfType<ItemAlpha>().UpdateItems(choice.loot[i].name, choice.loot[i].amount);
+                    if ((choice.loot.Capacity - i == 1))
+                    {
+                        positiveBox.text += "!";
+                    }
+                    else
+                    {
+                        positiveBox.text += ", ";
+                    }
                 }
             }
         }
-        else
-            positiveBox.text = "Sadly you recieved no loot";
     }
+
+
     private void BadResult(ChoiceList choice)
     {
+        if(choice.damageTaken.Length > 1)
+            negativeBox.text = "You took " + choice.damageTaken[1].ToString() + " because you had ";
         if (CheckDefences(choice.protectiveItems))
         {
             if (currentHealth - choice.damageTaken[1] <= 0 && choice.tookDamage)
             {
-                storyBox.text = "You have died!";
+                if (choice.deathMessage.Length > 0)
+                {
+                    Death(choice.textToDisplay ,choice.deathMessage);
+                }
+                else
+                    Death(choice.textToDisplay, "The wounds have caught up to you. You have died!");
             }
             else
             {
-                negativeBox.text = "";
-                negativeBox.text = "You took " + choice.damageTaken[1].ToString() + " because you had one of these items ";
-                for (int i = 0; i < choice.protectiveItems.Length; i++)
-                {
-                    negativeBox.text += choice.protectiveItems[i];
-                    if ((choice.protectiveItems.Length - i) == 1)
-                    {
-                        negativeBox.text += "!";
-                    }
-                    else
-                        negativeBox.text += ", ";
-
-                }
+                if(choice.encounterResult.Length > 0)
+                    encounterBox.text = choice.encounterResult;
+                negativeBox.text += " eqipped";
                 GoodResult(choice);
             }
 
         }
         else
         {
-            currentHealth -= choice.damageTaken[0];
-            if (currentHealth < 0 && choice.tookDamage)
+            if (choice.tookDamage)
             {
-                storyBox.text = "You have died!";
-            }
-            GoodResult(choice);
+                currentHealth -= choice.damageTaken[0];
+                if (currentHealth <= 0)
+                {
+                    if (choice.deathMessage.Length > 0)
+                    {
+                        Death(choice.textToDisplay, choice.deathMessage);
+                    }
+                    else
+                        Death(choice.textToDisplay, "The wounds have caught up to you. You have died!");
+                }
+                else
+                {
+                    if (choice.encounterResult.Length > 0)
+                        encounterBox.text = choice.encounterResult;
+                    negativeBox.text = "You took " + choice.damageTaken[0].ToString() + " damage";
+                    GoodResult(choice);
 
+                }
+            }
+
+        }
+
+        if(choice.lootLost.Capacity > 0)
+        {
+            lootBox.text = "You have lost ";
+            for(int i = 0; i < choice.lootLost.Capacity; i++)
+            {
+                FindObjectOfType<ItemAlpha>().RemoveItem(choice.lootLost[i].name, choice.lootLost[i].amount);
+                lootBox.text += choice.lootLost[i].amount + " " + choice.lootLost[i].name;
+                if (choice.lootLost.Capacity - i == 1)
+                {
+                    lootBox.text += "!";
+                }
+                else
+                    lootBox.text += ", ";
+            }
         }
     }
 
     private bool CheckDefences(string[] protect)
     {
         bool isDefended = false;
-        for(int i = 0; i < protect.Length; i++)
+        if (protect.Length > 0)
         {
-            for(int j = 0; j <items.m_eqippableItems.Capacity; j++)
+            for (int i = 0; i < protect.Length; i++)
             {
-                if((protect[i] == items.m_eqippableItems[j].itemName) && items.m_eqippableItems[j].equipped)
+                for (int j = 0; j < items.m_eqippableItems.Capacity; j++)
                 {
-                    isDefended = true;
-                    break;
+                    if ((protect[i] == items.m_eqippableItems[j].itemName) && items.m_eqippableItems[j].equipped)
+                    {
+                        negativeBox.text += protect[i];
+                        isDefended = true;
+                        break;
+                    }
                 }
             }
         }
@@ -150,4 +195,21 @@ public class ResultDisplay : MonoBehaviour {
         
     }
 
+    private void Death(string deathStory,string deathString)
+    {
+        Debug.Log(deathString);
+        resultPanel.SetActive(false);
+        deathPanel.SetActive(true);
+        deathStoryBox.text = deathStory;
+        deathBox.text = deathString;
+    }
+
+    public void ResetPanel()
+    {
+        storyBox.text = "";
+        encounterBox.text = "";
+        positiveBox.text = "";
+        negativeBox.text = "";
+        lootBox.text = "";
+    }
 }

@@ -113,13 +113,6 @@ public class StoreFront : MonoBehaviour
         CheckCost(isFifth);
     }
 
-    public void UpdateDisplay()
-    {
-        FindObjectOfType<InventoryDisplay>().UpdateInventoryDisplay(currentWeapon, 0);
-        FindObjectOfType<InventoryDisplay>().UpdateInventoryDisplay(currentArmour, 0);
-        FindObjectOfType<InventoryDisplay>().UpdateInventoryDisplay(currentBackpack, -1);
-    }
-
     public void SellAllJunk()
     {
         int money = 0;
@@ -131,11 +124,12 @@ public class StoreFront : MonoBehaviour
                 items.m_ItemList[i].curHeld = 0;
             }
         }
-        moneyDisplay.text = money.ToString();
+        FindObjectOfType<ItemAlpha>().SendCoins(curMoney);
     }
 
     public void Buy(Button clicked)
     {
+        clicked.interactable = false;
         char[] array = clicked.name.ToCharArray();
         string temp = array[array.Length - 1].ToString();
         int selected = int.Parse(temp);
@@ -144,6 +138,7 @@ public class StoreFront : MonoBehaviour
             items.m_eqippableItems[weaponNum].equipped = false;
             items.m_eqippableItems[temp1].equipped = true;
             currentWeapon = items.m_eqippableItems[temp1];
+            Debug.Log(items.m_eqippableItems[temp1].itemName);
         }
 
         else if (selected == 2)
@@ -151,6 +146,7 @@ public class StoreFront : MonoBehaviour
             items.m_eqippableItems[weaponNum].equipped = false;
             items.m_eqippableItems[temp2].equipped = true;
             currentWeapon = items.m_eqippableItems[temp2];
+            Debug.Log(items.m_eqippableItems[temp2].itemName);
         }
 
         else if (selected == 3)
@@ -158,6 +154,7 @@ public class StoreFront : MonoBehaviour
             items.m_eqippableItems[armourNum].equipped = false;
             items.m_eqippableItems[temp3].equipped = true;
             currentArmour = items.m_eqippableItems[temp3];
+            Debug.Log(items.m_eqippableItems[temp3].itemName);
         }
 
         else if (selected == 4)
@@ -165,6 +162,7 @@ public class StoreFront : MonoBehaviour
             items.m_eqippableItems[armourNum].equipped = false;
             items.m_eqippableItems[temp4].equipped = true;
             currentArmour = items.m_eqippableItems[temp4];
+            Debug.Log(items.m_eqippableItems[temp4].itemName);
         }
 
         else
@@ -174,11 +172,12 @@ public class StoreFront : MonoBehaviour
             currentBackpack = items.m_eqippableItems[temp5];
         }
 
-        UpdateDisplay();
+        FindObjectOfType<InventoryDisplay>().UpdateEquippedItems(currentWeapon, currentArmour, currentBackpack);
     }
 
     public void CheckCost(bool backpack)
     {
+        GetCoins();
         if(items.m_eqippableItems[temp1].cost > curMoney)
         {
             option01.interactable = false;
@@ -214,5 +213,10 @@ public class StoreFront : MonoBehaviour
             else
                 option05.interactable = true;
         }
+    }
+
+    private void GetCoins()
+    {
+        curMoney = FindObjectOfType<ItemAlpha>().ReturnCoins();
     }
 }
