@@ -3114,10 +3114,47 @@ MonoBehaviour:
   button1: {fileID: 370535601}
   button2: {fileID: 515807823}
   button3: {fileID: 533467329}
-  choiceTitle: Always stay in the shadow of the hill
+  choiceTitle: Slowly move through, careful not to make a sound
   buttonTitle: {fileID: 173035108}
   multiDirection: 0
-  m_ChoiceList: []
+  m_ChoiceList:
+  - name: '#1'
+    textToDisplay: Moving carefully you notice a fiant ant, a scout. You stop moving,
+      stop breathing and wait for it to pass.
+    badChoice: 0
+    protectiveItems: []
+    tookDamage: 0
+    damageTaken: 
+    encounterResult: 
+    deathMessage: 
+    loot: []
+    lootLost: []
+  - name: '#2'
+    textToDisplay: Keeping yourself alert you move through the area. You find some
+      feathers along the way!
+    badChoice: 0
+    protectiveItems: []
+    tookDamage: 0
+    damageTaken: 
+    encounterResult: 
+    deathMessage: 
+    loot:
+    - name: Feathers
+      amount: 5
+    lootLost: []
+  - name: '#3'
+    textToDisplay: Moveing carefully you notice a giant ant, a scout. You stop moving,
+      stop breathing and then you realise there is one behind you as well...
+    badChoice: 1
+    protectiveItems: []
+    tookDamage: 0
+    damageTaken: 
+    encounterResult: Moving quickly you shimmy up the closest tree... Dropping a ration
+    deathMessage: 
+    loot: []
+    lootLost:
+    - name: Ration
+      amount: 1
 --- !u!114 &370535603
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4210,10 +4247,61 @@ MonoBehaviour:
   button1: {fileID: 370535601}
   button2: {fileID: 515807823}
   button3: {fileID: 533467329}
-  choiceTitle: Walk Casually Over the Top
+  choiceTitle: Try to go tree to tree without touching the ground
   buttonTitle: {fileID: 173035108}
   multiDirection: 0
-  m_ChoiceList: []
+  m_ChoiceList:
+  - name: '#1'
+    textToDisplay: Like an overweight ninja you go tree to tree without touching the
+      ground. Unnoticed by anything on the forest floor!
+    badChoice: 0
+    protectiveItems: []
+    tookDamage: 0
+    damageTaken: 
+    encounterResult: 
+    deathMessage: 
+    loot: []
+    lootLost: []
+  - name: '#2'
+    textToDisplay: While going from tree to tree you notice some berries! Score!!
+    badChoice: 0
+    protectiveItems: []
+    tookDamage: 0
+    damageTaken: 
+    encounterResult: 
+    deathMessage: 
+    loot:
+    - name: Berries
+      amount: 10
+    lootLost: []
+  - name: '#3'
+    textToDisplay: While jumping from one tree to another you slip falling and damaging
+      your leg. Thankfully you managed to get back up the tree but you lose 2 days
+      to heal
+    badChoice: 1
+    protectiveItems: []
+    tookDamage: 0
+    damageTaken: 
+    encounterResult: You linger in that tree while you body recovers enough to continue
+    deathMessage: 
+    loot: []
+    lootLost:
+    - name: Ration
+      amount: 2
+  - name: '#4'
+    textToDisplay: You notice berries, you are unsure about them but decide to try
+      and mouthful. Your stomach cramps instantly and due to your current height the
+      next park is... Uncomfortable
+    badChoice: 1
+    protectiveItems: []
+    tookDamage: 1
+    damageTaken: 01000000
+    encounterResult: Being at that height you managed to wedge yourself between 2
+      branches to relieve yourself
+    deathMessage: Exhaution and exposure gets you in the end. You were dead before
+      you hit the forest floor
+    loot: []
+    lootLost: []
 --- !u!114 &515807825
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4281,10 +4369,57 @@ MonoBehaviour:
   button1: {fileID: 370535601}
   button2: {fileID: 515807823}
   button3: {fileID: 533467329}
-  choiceTitle: This is the Hills Choice 3
+  choiceTitle: Walk through alert but looking for loot
   buttonTitle: {fileID: 173035108}
   multiDirection: 0
-  m_ChoiceList: []
+  m_ChoiceList:
+  - name: '#1'
+    textToDisplay: 'As you crest a hill in the middle of this majestic forest you
+      notice a giant ant. You quickly duck behind a tree. Then you notice it isn;t
+      moving. As you look back it looks like a battle has taken place here.
+
+
+      Win!'
+    badChoice: 0
+    protectiveItems: []
+    tookDamage: 0
+    damageTaken: 
+    encounterResult: 
+    deathMessage: 
+    loot:
+    - name: Gold
+      amount: 10
+    - name: Giant Ant Carapace
+      amount: 4
+    lootLost: []
+  - name: '#2'
+    textToDisplay: Stealth can only get you so far, turning around a corner there
+      is a giant ant too close to escape from. So you charge before it has time to
+      inform the nest
+    badChoice: 1
+    protectiveItems:
+    - Warhammer
+    - War Pick
+    - Club
+    - Heavy Armour
+    tookDamage: 1
+    damageTaken: 0300000002000000
+    encounterResult: You cross the space between the 2 in seconds and then with total
+      abandon you give it no room to attack.
+    deathMessage: As you get within striking distance the giant ant it rears up and
+      you miss... What a bad time to miss an attack!
+    loot: []
+    lootLost: []
+  - name: '#3'
+    textToDisplay: 
+    badChoice: 0
+    protectiveItems: []
+    tookDamage: 0
+    damageTaken: 
+    encounterResult: 
+    deathMessage: 
+    loot: []
+    lootLost: []
 --- !u!114 &533467329
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5543,7 +5678,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 188.24323, y: -300}
+  m_AnchoredPosition: {x: 188.15808, y: -300}
   m_SizeDelta: {x: 350, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &691429144
@@ -6036,7 +6171,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 188.24323, y: -70}
+  m_AnchoredPosition: {x: 188.15808, y: -70}
   m_SizeDelta: {x: 350, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &761774118
@@ -12760,7 +12895,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 188.24323, y: -185}
+  m_AnchoredPosition: {x: 188.15808, y: -185}
   m_SizeDelta: {x: 350, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1731502923
@@ -15783,7 +15918,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 188.24323, y: -415}
+  m_AnchoredPosition: {x: 188.15808, y: -415}
   m_SizeDelta: {x: 350, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2048957022
@@ -16320,7 +16455,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 188.24323, y: -530}
+  m_AnchoredPosition: {x: 188.15808, y: -530}
   m_SizeDelta: {x: 350, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2124483232
