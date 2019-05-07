@@ -48,6 +48,17 @@ public class ItemAlpha : MonoBehaviour {
         coins += i;
     }
 
+    public void EmptyItem(string name)
+    {
+        for (int i = 0; i < m_useableItems.Capacity; i++)
+        {
+            if (m_useableItems[i].itemName == name)
+            {
+                m_useableItems[i].curHeld =0;
+            }
+        }
+    }
+
     public void RemoveItem(string name, int amount)
     {
         for(int i = 0; i < m_useableItems.Capacity; i++)

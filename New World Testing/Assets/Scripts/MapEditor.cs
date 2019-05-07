@@ -32,10 +32,6 @@ public class MapEditor : MonoBehaviour {
         hasRiver = (river.Length != 0);
         hasCliff = (cliff.Length != 0);
 
-        FindObjectOfType<InventoryDisplay>().UpdateItemsDisplay();
-        FindObjectOfType<StoreFront>().DisplayWares();
-        FindObjectOfType<InventoryDisplay>().UpdateEquippedItems();
-
         SetUpMap();
 	}
 	

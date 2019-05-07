@@ -126,6 +126,13 @@ public class ResultDisplay : MonoBehaviour {
 
         if(choice.lootLost.Capacity > 0)
         {
+            if(choice.lootLost[0].name == "All")
+            {
+                for(int i = 0; i < choice.lootLost.Capacity; i++)
+                {
+                    FindObjectOfType<ItemAlpha>().EmptyItem(choice.lootLost[i].name);
+                }
+            }
             lootBox.text = "You have lost ";
             for(int i = 0; i < choice.lootLost.Capacity; i++)
             {
