@@ -5,8 +5,6 @@ using UnityEngine.UI;
 
 public class InventoryDisplay : MonoBehaviour {
 
-    public int currentFunds;
-
     public Image weaponImage;
     public Text weaponText;
     public Image armourImage;

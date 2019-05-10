@@ -85,4 +85,26 @@ public class ItemAlpha : MonoBehaviour {
     {
         return m_useableItems[6].curHeld;
     }
+
+    public string CheckPrice(ItemsList current, ItemsList buying)
+    {
+        string total = "";
+        int equals = current.cost - buying.cost;
+        if (equals >= 1)
+        {
+            total = "You gain " + equals.ToString() + "GPs";
+        }
+
+        else if(equals == 0)
+        {
+            total = "Equal trade";
+        }
+        else
+        {
+            equals = -equals;
+            total = "You lose " + equals.ToString() + "GPs";
+        }
+
+        return total;
+    }
 }
