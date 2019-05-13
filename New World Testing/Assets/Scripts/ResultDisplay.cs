@@ -54,7 +54,7 @@ public class ResultDisplay : MonoBehaviour {
                 if (choice.loot[i].name == "Coins" || choice.loot[i].name == "Gold")
                 {
                     positiveBox.text += choice.loot[i].amount + " gold pieces";
-                    FindObjectOfType<ItemAlpha>().AddCoins(choice.loot[i].amount);
+                    FindObjectOfType<ItemAlpha>().SendCoins(choice.loot[i].amount);
                 }
                 else
                 {
@@ -146,6 +146,7 @@ public class ResultDisplay : MonoBehaviour {
                     lootBox.text += ", ";
             }
         }
+        FindObjectOfType<ItemAlpha>().CurrentHealth(currentHealth);
     }
 
     private bool CheckDefences(string[] protect)
@@ -182,21 +183,28 @@ public class ResultDisplay : MonoBehaviour {
 
     public void HideOldButton(bool clicked)
     {
-        Button[] next = null;
-        next = lastClicked.GetComponentInChildren<Destination>().possibleNext;
-        if(!clicked)
+        if (lastClicked.GetComponent<MapNode>().isLast)
         {
-            lastClicked.interactable = false;
-            for (int i = 0; i < next.Length; i++)
-            {
-                next[i].interactable = true;
-            }
+            FindObjectOfType<MainMenu>().NewTown();
         }
         else
         {
-            for (int i = 0; i < next.Length; i++)
+            Button[] next = null;
+            next = lastClicked.GetComponentInChildren<Destination>().possibleNext;
+            if (!clicked)
             {
-                next[i].interactable = false;
+                lastClicked.interactable = false;
+                for (int i = 0; i < next.Length; i++)
+                {
+                    next[i].interactable = true;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < next.Length; i++)
+                {
+                    next[i].interactable = false;
+                }
             }
         }
         
@@ -219,4 +227,5 @@ public class ResultDisplay : MonoBehaviour {
         negativeBox.text = "";
         lootBox.text = "";
     }
+
 }

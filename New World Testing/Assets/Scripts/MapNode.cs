@@ -16,4 +16,12 @@ public class MapNode : MonoBehaviour
             gameObject.GetComponent<Button>().interactable = false;
         }
     }
+
+    public void DisplayNextStep()
+    {
+        for(int i = 0; i < next.Length; i++)
+        {
+            next[i].interactable = true;
+        }
+    }
 }

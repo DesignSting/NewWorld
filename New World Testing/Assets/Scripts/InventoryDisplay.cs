@@ -52,7 +52,7 @@ public class InventoryDisplay : MonoBehaviour {
 
         for (int i = 0; i < items.m_useableItems.Capacity; i++)
         {
-            if (items.m_eqippableItems[i].equipped)
+            if (items.m_useableItems[i].equipped)
             {
                 backpackImage.sprite = items.m_useableItems[i].displayImage;
                 backpackText.text = items.m_useableItems[i].itemName;

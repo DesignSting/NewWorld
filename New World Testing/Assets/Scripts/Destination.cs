@@ -39,7 +39,7 @@ public class Destination : MonoBehaviour {
         choice3.GetComponentInChildren<Text>().text = choice3.GetComponent<ChoiceAlpha>().choiceTitle;
 
         FindObjectOfType<ResultDisplay>().LastClicked(GetComponent<Button>());
-        Cloud();
+        //Cloud();
     }
 
     public void Cloud()

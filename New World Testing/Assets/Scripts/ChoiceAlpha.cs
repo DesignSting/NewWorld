@@ -43,7 +43,6 @@ public class ChoiceAlpha : MonoBehaviour {
     public void DisplayText()
     {
         int rand = Random.Range(0, m_ChoiceList.Capacity);
-        Debug.Log(rand);
         FindObjectOfType<ResultDisplay>().AcceptChoice(m_ChoiceList[rand], GetComponentInParent<Destination>().destinationPanel);
 
     }

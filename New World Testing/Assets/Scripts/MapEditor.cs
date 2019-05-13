@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class MapEditor : MonoBehaviour {
 
+    public Button firstLocation;
+
+
     public Button[] wasteland;
     public Button[] river;
     public Button[] ford;
@@ -32,7 +35,7 @@ public class MapEditor : MonoBehaviour {
         hasRiver = (river.Length != 0);
         hasCliff = (cliff.Length != 0);
 
-        SetUpMap();
+        //SetUpMap();
 	}
 	
 	// Update is called once per frame
@@ -40,7 +43,7 @@ public class MapEditor : MonoBehaviour {
 		
 	}
 
-    private void SetUpMap()
+    public void SetUpMap()
     {
         for (int i = 0; i < wasteland.Length; i++)
         {
@@ -59,12 +62,17 @@ public class MapEditor : MonoBehaviour {
             wasteland[i].GetComponentInChildren<Text>().text = wastelandScript.destinationName;
             wasteland[i].name = "Wasteland0" + (i+1).ToString();
 
+            if (wasteland[i].GetComponent<MapNode>().isFirst)
+                firstLocation = wasteland[i];
+
         }
 
         int rand = Random.Range(0, 3);
         for (int i = 0; i < other.Length; i++)
         {
-            if(rand == 0)
+            if (other[i].GetComponent<MapNode>().isFirst)
+                firstLocation = other[i];
+            if (rand == 0)
             {
                 other[i].GetComponentInChildren<Destination>().destinationName = hillScript.destinationName;
                 other[i].GetComponentInChildren<Destination>().destinationPanel = hillScript.destinationPanel;
@@ -198,6 +206,7 @@ public class MapEditor : MonoBehaviour {
                 cliff[i].name = "Cliff0" + (i + 1).ToString();
             }
         }
+        firstLocation.interactable = true;
     }
     public void HideMap()
     {
@@ -213,4 +222,5 @@ public class MapEditor : MonoBehaviour {
     {
         lastClicked = button;
     }
+
 }

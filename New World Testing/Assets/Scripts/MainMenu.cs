@@ -6,54 +6,59 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour {
 
-    public Button newGame;
-    public Button information;
-    public Button exitGame;
-
-
     public GameObject mapTest;
     public GameObject inventoryPanel;
-    public GameObject storePanel;
+    public GameObject townScreenPanel;
+    public GameObject mainMenuPanel;
 
-	// Use this for initialization
-	void Start ()
-    {
-		
-	}
-	
-	// Update is called once per frame
-	void Update ()
-    {
-
-	}
 
     public void NewGame()
     {
-        inventoryPanel.SetActive(true);
-        //inventoryPanel.GetComponent<DisplayPanel>().ShowPanel();
-        inventoryPanel.GetComponent<DisplayPanel>().HideButtons();
-        storePanel.SetActive(true);
-        //storePanel.GetComponent<DisplayPanel>().ShowPanel();
-        //storePanel.GetComponent<DisplayPanel>().HideButtons();
-
-        //FindObjectOfType<InventoryDisplay>().UpdateItemsDisplay();
-        //FindObjectOfType<StoreFront>().DisplayWares();
-        //FindObjectOfType<InventoryDisplay>().UpdateEquippedItems();
-
+        FindObjectOfType<ItemAlpha>().CheckEquipped();
+        FindObjectOfType<ItemAlpha>().NewGame();
+        mainMenuPanel.SetActive(false);
+        townScreenPanel.SetActive(true);
     }
 
     public void StartGame()
     {
-        inventoryPanel.GetComponent<DisplayPanel>().ShowPanel();
+        townScreenPanel.SetActive(false);
+        mapTest.SetActive(true);
+        inventoryPanel.SetActive(true);
+        FindObjectOfType<InventoryDisplay>().UpdateEquippedItems();
+        FindObjectOfType<InventoryDisplay>().UpdateItemsDisplay();
+        FindObjectOfType<MapEditor>().SetUpMap();
     }
 
     public void Information()
     {
-
+        Debug.Log("This is the information button");
     }
 
     public void QuitGame()
     {
         Application.Quit();
+        Debug.Log("This is the quit button");
+    }
+
+    public void MainMenuReturn()
+    {
+        mapTest.SetActive(false);
+        mainMenuPanel.SetActive(true);
+    }
+
+    public void NewTown()
+    {
+        mapTest.SetActive(false);
+        townScreenPanel.SetActive(true);
+        inventoryPanel.SetActive(false);
+        FindObjectOfType<StoreFront>().NewTown();
+        GetComponent<SaveLoad>().SaveGame(0);
+    }
+
+    public void LoadGame()
+    {
+        mainMenuPanel.SetActive(false);
+        townScreenPanel.SetActive(true);
     }
 }
