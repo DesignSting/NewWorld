@@ -15,6 +15,7 @@ public class ChoiceList
     public bool badChoice;              // Returns true if this was a bad choice
     public string[] protectiveItems;    // Lists the names of the items that protects the player in a 'bad choice'
     public bool tookDamage;             // bool too state if damage is taken
+    public bool creatureDamage;         // True if a creature was involved in your damage
     public int[] damageTaken;           // int value of the damage taken by the player
     [TextArea(1,3)]
     public string encounterResult;
@@ -26,13 +27,14 @@ public class ChoiceList
 
 
 
-    public ChoiceList(string newName, string newTextBox, bool newBadChoice, string[] newProtectiveItems, bool newTookDamage, int[] newDamageTaken, string newDeathMessage)
+    public ChoiceList(string newName, string newTextBox, bool newBadChoice, string[] newProtectiveItems, bool newTookDamage, bool newCreatureDamage, int[] newDamageTaken, string newDeathMessage)
     {
         name = newName;
         textToDisplay = newTextBox;
         badChoice = newBadChoice;
         protectiveItems = newProtectiveItems;
         tookDamage = newTookDamage;
+        creatureDamage = newCreatureDamage;
         damageTaken = newDamageTaken;
         deathMessage = newDeathMessage;
     }

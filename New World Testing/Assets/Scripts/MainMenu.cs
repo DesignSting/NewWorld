@@ -11,13 +11,37 @@ public class MainMenu : MonoBehaviour {
     public GameObject townScreenPanel;
     public GameObject mainMenuPanel;
 
+    //public float timer;
+    //public bool mouseOver;
+
+    //private void Update()
+    //{
+    //    if (inventoryPanel.activeInHierarchy)
+    //    {
+    //        if (inventoryPanel.GetComponent<Animator>().GetBool("isOpen"))
+    //        {
+    //            timer += Time.deltaTime;
+    //        }
+    //        if (timer > 3 && !mouseOver)
+    //        {
+    //            inventoryPanel.GetComponent<Animator>().SetBool("isOpen", false);
+    //            timer = 0;
+    //        }
+    //    }
+
+    //}
 
     public void NewGame()
     {
         FindObjectOfType<ItemAlpha>().CheckEquipped();
         FindObjectOfType<ItemAlpha>().NewGame();
+        //inventoryPanel.SetActive(true);
+        //inventoryPanel.GetComponent<Animator>().SetBool("isOpen", true);
         mainMenuPanel.SetActive(false);
         townScreenPanel.SetActive(true);
+        FindObjectOfType<StoreFront>().SendToDisplay();
+        FindObjectOfType<InventoryDisplay>().ResetExpectedCoins();
+        FindObjectOfType<InventoryDisplay>().UpdateItemsDisplay();
     }
 
     public void StartGame()
@@ -25,7 +49,8 @@ public class MainMenu : MonoBehaviour {
         townScreenPanel.SetActive(false);
         mapTest.SetActive(true);
         inventoryPanel.SetActive(true);
-        FindObjectOfType<InventoryDisplay>().UpdateEquippedItems();
+        FindObjectOfType<StoreFront>().SendToDisplay();
+        //FindObjectOfType<InventoryDisplay>().UpdateEquippedItems();
         FindObjectOfType<InventoryDisplay>().UpdateItemsDisplay();
         FindObjectOfType<MapEditor>().SetUpMap();
     }
@@ -51,7 +76,7 @@ public class MainMenu : MonoBehaviour {
     {
         mapTest.SetActive(false);
         townScreenPanel.SetActive(true);
-        inventoryPanel.SetActive(false);
+        inventoryPanel.GetComponent<Animator>().SetBool("isOpen", true);
         FindObjectOfType<StoreFront>().NewTown();
         GetComponent<SaveLoad>().SaveGame(0);
     }
@@ -60,5 +85,12 @@ public class MainMenu : MonoBehaviour {
     {
         mainMenuPanel.SetActive(false);
         townScreenPanel.SetActive(true);
+    }
+
+    public void ToMainMenu()
+    {
+        mapTest.SetActive(false);
+        inventoryPanel.SetActive(false);
+        mainMenuPanel.SetActive(true);
     }
 }

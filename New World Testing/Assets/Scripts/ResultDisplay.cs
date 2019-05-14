@@ -22,14 +22,34 @@ public class ResultDisplay : MonoBehaviour {
 
     public GameObject map;
 
-    public int currentHealth;
+    private int currentHealth;
+
+    public Button choice1;
+    public Button choice2;
+    private bool isChoice;
+    private int choiceMade;
+    //private bool isTimer;
+    public float timer;
+
+    private void Update()
+    {
+        if(timer > 5)
+        {
+            isChoice = true;
+            choiceMade = 1;
+            timer = 0;
+            //isTimer = false;
+        }
+    }
 
 
     public void AcceptChoice(ChoiceList choice, GameObject panel)
     {
+        ResetPanel();
         panel.SetActive(false);
         storyBox.text = choice.textToDisplay;
         resultPanel.SetActive(true);
+        currentHealth = items.CurrentHealth();
         if (choice.badChoice)
         {
             BadResult(choice);
@@ -54,12 +74,12 @@ public class ResultDisplay : MonoBehaviour {
                 if (choice.loot[i].name == "Coins" || choice.loot[i].name == "Gold")
                 {
                     positiveBox.text += choice.loot[i].amount + " gold pieces";
-                    FindObjectOfType<ItemAlpha>().SendCoins(choice.loot[i].amount);
+                    items.SendCoins(choice.loot[i].amount);
                 }
                 else
                 {
                     positiveBox.text += choice.loot[i].amount + " " + choice.loot[i].name;
-                    FindObjectOfType<ItemAlpha>().UpdateItems(choice.loot[i].name, choice.loot[i].amount);
+                    items.UpdateItems(choice.loot[i].name, choice.loot[i].amount);
                     if ((choice.loot.Capacity - i == 1))
                     {
                         positiveBox.text += "!";
@@ -76,34 +96,36 @@ public class ResultDisplay : MonoBehaviour {
 
     private void BadResult(ChoiceList choice)
     {
-        if(choice.damageTaken.Length > 1)
-            negativeBox.text = "You took " + choice.damageTaken[1].ToString() + " because you had ";
-        if (CheckDefences(choice.protectiveItems))
-        {
-            if (currentHealth - choice.damageTaken[1] <= 0 && choice.tookDamage)
-            {
-                if (choice.deathMessage.Length > 0)
-                {
-                    Death(choice.textToDisplay ,choice.deathMessage);
-                }
-                else
-                    Death(choice.textToDisplay, "The wounds have caught up to you. You have died!");
-            }
-            else
-            {
-                if(choice.encounterResult.Length > 0)
-                    encounterBox.text = choice.encounterResult;
-                negativeBox.text += " eqipped";
-                GoodResult(choice);
-            }
+        Debug.Log("Creature " + choice.creatureDamage + " & Bait " + items.ReturnBait());
+        choiceMade = 1;
+        //if((choice.creatureDamage) && (items.ReturnBait() > 0))
+        //{
+        //    encounterBox.enabled = true;
+        //    encounterBox.text = "Would you use one of your baits? Or just attack?!?";
+        //    positiveBox.text = "You only have " + currentHealth + "hp left!";
+        //    choice1.gameObject.SetActive(true);
+        //    choice2.gameObject.SetActive(true);
+        //    //isTimer = true;
 
-        }
-        else
+        //    do
+        //    {
+        //        timer += Time.deltaTime;
+        //    }
+        //    while (!isChoice);
+        //    isChoice = false;
+        //    //isTimer = false;
+        //    timer = 0;
+        //    choice1.gameObject.SetActive(false);
+        //    choice2.gameObject.SetActive(false);
+        //}
+        if (choiceMade == 1)
         {
-            if (choice.tookDamage)
+            int dmgTaken = 0;
+            if (choice.damageTaken.Length > 1)
+                negativeBox.text = "You took " + choice.damageTaken[1].ToString() + " DMG because you had ";
+            if (CheckDefences(choice.protectiveItems))
             {
-                currentHealth -= choice.damageTaken[0];
-                if (currentHealth <= 0)
+                if (currentHealth - choice.damageTaken[1] <= 0 && choice.tookDamage)
                 {
                     if (choice.deathMessage.Length > 0)
                     {
@@ -116,37 +138,71 @@ public class ResultDisplay : MonoBehaviour {
                 {
                     if (choice.encounterResult.Length > 0)
                         encounterBox.text = choice.encounterResult;
-                    negativeBox.text = "You took " + choice.damageTaken[0].ToString() + " damage";
+                    negativeBox.text += " eqipped";
+                    currentHealth -= choice.damageTaken[1];
+                    dmgTaken = choice.damageTaken[1];
                     GoodResult(choice);
-
                 }
+
+            }
+            else
+            {
+                if (choice.tookDamage)
+                {
+                    currentHealth -= choice.damageTaken[0];
+                    dmgTaken = choice.damageTaken[0];
+                    if (currentHealth <= 0)
+                    {
+                        if (choice.deathMessage.Length > 0)
+                        {
+                            Death(choice.textToDisplay, choice.deathMessage);
+                        }
+                        else
+                            Death(choice.textToDisplay, "The wounds have caught up to you. You have died!");
+                    }
+                    else
+                    {
+                        if (choice.encounterResult.Length > 0)
+                            encounterBox.text = choice.encounterResult;
+                        negativeBox.text = "You took " + choice.damageTaken[0].ToString() + " damage";
+                        GoodResult(choice);
+
+                    }
+                }
+
             }
 
+            if (choice.lootLost.Capacity > 0)
+            {
+                if (choice.lootLost[0].name == "All")
+                {
+                    for (int i = 0; i < choice.lootLost.Capacity; i++)
+                    {
+                        items.EmptyItem(choice.lootLost[i].name);
+                    }
+                }
+                lootBox.text = "You have lost ";
+                for (int i = 0; i < choice.lootLost.Capacity; i++)
+                {
+                    items.RemoveItem(choice.lootLost[i].name, choice.lootLost[i].amount);
+                    lootBox.text += choice.lootLost[i].amount + " " + choice.lootLost[i].name;
+                    if (choice.lootLost.Capacity - i == 1)
+                    {
+                        lootBox.text += "!";
+                    }
+                    else
+                        lootBox.text += ", ";
+                }
+            }
+            items.CurrentHealth(-dmgTaken);
         }
 
-        if(choice.lootLost.Capacity > 0)
+        if(choiceMade == 2)
         {
-            if(choice.lootLost[0].name == "All")
-            {
-                for(int i = 0; i < choice.lootLost.Capacity; i++)
-                {
-                    FindObjectOfType<ItemAlpha>().EmptyItem(choice.lootLost[i].name);
-                }
-            }
-            lootBox.text = "You have lost ";
-            for(int i = 0; i < choice.lootLost.Capacity; i++)
-            {
-                FindObjectOfType<ItemAlpha>().RemoveItem(choice.lootLost[i].name, choice.lootLost[i].amount);
-                lootBox.text += choice.lootLost[i].amount + " " + choice.lootLost[i].name;
-                if (choice.lootLost.Capacity - i == 1)
-                {
-                    lootBox.text += "!";
-                }
-                else
-                    lootBox.text += ", ";
-            }
+            encounterBox.text = "";
+            storyBox.text = "Throwing the meat to the savaged your quickly make your escape while they fight over the food. /n Nice Move";
+            items.RemoveItem("Bait", -1);
         }
-        FindObjectOfType<ItemAlpha>().CurrentHealth(currentHealth);
     }
 
     private bool CheckDefences(string[] protect)
@@ -165,6 +221,8 @@ public class ResultDisplay : MonoBehaviour {
                         break;
                     }
                 }
+                if (isDefended)
+                    break;
             }
         }
 
@@ -227,5 +285,27 @@ public class ResultDisplay : MonoBehaviour {
         negativeBox.text = "";
         lootBox.text = "";
     }
+
+    public void AfterDeath()
+    {
+        ResetPanel();
+        deathPanel.SetActive(false);
+        resultPanel.SetActive(false);
+    }
+
+    public void ButtonChoice(int i)
+    {
+        choiceMade = i;
+        isChoice = true;
+    }
+    /**
+     *  - Need to get the bait system working
+                - Maybe take it out just after the choice goes to result and wait for user input there
+                - Make the original BadResult take an int as well to make sure they are not being confused
+        - Move the items to the top of the screen and always visible while on map screen
+        - Start populating more maps and figure out how they are going to connect to one another. This means the player can always go the wrong way and end up in bad areas. Also will mean they will need to change weapons and armour more often
+        - Have the HP, Expected gold and medipacs at the bottom of the screen?
+     * 
+     * */
 
 }

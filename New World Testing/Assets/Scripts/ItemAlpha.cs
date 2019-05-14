@@ -16,7 +16,8 @@ public class ItemAlpha : MonoBehaviour {
     private int currentBackpack;
 
     public int coins;
-    public int health;
+    public int currentHealth;
+    public int expCoins;
 
      public void UpdateItems(string name, int amount)
     {
@@ -26,6 +27,7 @@ public class ItemAlpha : MonoBehaviour {
             if(name == m_ItemList[i].itemName)
             {
                 m_ItemList[i].curHeld += amount;
+                expCoins = (amount * m_ItemList[i].cost);
                 isFound = true;
             }
         }
@@ -41,6 +43,13 @@ public class ItemAlpha : MonoBehaviour {
             }
         }
         FindObjectOfType<InventoryDisplay>().UpdateItemsDisplay();
+    }
+
+    public int ExpectedCoins()
+    {
+        int i = expCoins;
+        expCoins = 0;
+        return i;
     }
 
     public string ReturnName(ItemsList itemsList)
@@ -90,6 +99,7 @@ public class ItemAlpha : MonoBehaviour {
     {
         string total = "";
         int equals = current.cost - buying.cost;
+        Debug.Log(equals);
         if (equals >= 1)
         {
             total = "You gain " + equals.ToString() + "GPs";
@@ -130,6 +140,8 @@ public class ItemAlpha : MonoBehaviour {
         currentBackpack = 0;
 
         coins = 100;
+        currentHealth = 20;
+        m_useableItems[3].curHeld = 10;
         FindObjectOfType<StoreFront>().NewGame();
     }
 
@@ -195,12 +207,33 @@ public class ItemAlpha : MonoBehaviour {
 
     public void CurrentHealth(int i)
     {
-        health = i;
+        currentHealth += i;
     }
 
     public int CurrentHealth()
     {
-        return health;
+        return currentHealth;
+    }
+
+    public void AddHealth()
+    {
+        int health = CurrentHealth();
+        if (m_useableItems[5].curHeld > 0)
+        {
+            if (health < 15)
+            {
+                currentHealth += 5;
+                m_useableItems[5].curHeld--;
+            }
+
+            else if (health > 15 && health < 20)
+            {
+                currentHealth = 20;
+                m_useableItems[5].curHeld--;
+            }
+            FindObjectOfType<InventoryDisplay>().UpdateItemsDisplay();
+        }
+                
     }
 
     public int CurrentWeaponNum()
@@ -230,7 +263,7 @@ public class ItemAlpha : MonoBehaviour {
             m_useableItems[i].equipped = false;
         }
         coins = 0;
-        health = 0;
+        currentHealth = 0;
     }
 
 
@@ -245,7 +278,20 @@ public class ItemAlpha : MonoBehaviour {
         CurrentHealth(health);
 
         FindObjectOfType<StoreFront>().LoadGame(weapon, armour, backpack);
+    }
 
-        Debug.Log(m_eqippableItems[currentWeapon].itemName);
+    public void NextDay()
+    {
+        if (m_useableItems[3].curHeld == 0)
+        {
+            CurrentHealth(-1);
+        }
+        else
+            m_useableItems[3].curHeld--;
+    }
+
+    public int ReturnBait()
+    {
+        return m_useableItems[4].curHeld;
     }
 }

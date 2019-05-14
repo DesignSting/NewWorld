@@ -35,6 +35,17 @@ public class StoreFront : MonoBehaviour
     public Image option04Image;
     public Image option05Image;
 
+    public Button[] itemButtons;
+
+    public Text curRations;
+    public Text rationsPrice;
+    public Text curRope;
+    public Text ropePrice;
+    public Text curBait;
+    public Text baitPrice;
+    public Text curMedicine;
+    public Text medicinePrice;
+
     public Text[] priceCheck;
     private string[] priceGet;
 
@@ -57,6 +68,10 @@ public class StoreFront : MonoBehaviour
     {
         priceGet = new string[] { "", "", "", "", "" };
 
+        rationsPrice.text = items.m_useableItems[3].cost.ToString();
+        baitPrice.text = items.m_useableItems[4].cost.ToString();
+        medicinePrice.text = items.m_useableItems[5].cost.ToString();
+        ropePrice.text = items.m_useableItems[6].cost.ToString();
     }
 
     public void NewGame()
@@ -69,6 +84,18 @@ public class StoreFront : MonoBehaviour
         backpackNum = 0;
         UpdateInventoryDisplay();
         DisplayWares();
+        UpdateItemDisplay();
+        CheckCost();
+    }
+
+    public void NewTown()
+    {
+        SellAllJunk();
+        GetCoins();
+        UpdateInventoryDisplay();
+        DisplayWares();
+        UpdateItemDisplay();
+        CheckCost();
     }
 
 
@@ -83,6 +110,8 @@ public class StoreFront : MonoBehaviour
         currentBackpack = items.CurrentBackpack();
         UpdateInventoryDisplay();
         DisplayWares();
+        UpdateItemDisplay();
+        CheckCost();
     }
 
     public void DisplayWares()
@@ -91,6 +120,7 @@ public class StoreFront : MonoBehaviour
         selectedArmour = false;
         selectedBackpack = false;
         selectedWeapon = false;
+
 
         int rand = Random.Range(0, 100);
         option05.gameObject.SetActive(true);
@@ -158,22 +188,6 @@ public class StoreFront : MonoBehaviour
         CheckCost(isFifth);
     }
 
-    public void SellAllJunk()
-    {
-        int money = 0;
-        for(int i = 0; i < items.m_ItemList.Capacity; i++)
-        {
-            if(items.m_ItemList[i].curHeld > 0)
-            {
-                money += (items.m_ItemList[i].curHeld * items.m_ItemList[i].cost);
-                items.m_ItemList[i].curHeld = 0;
-            }
-        }
-        Debug.Log(money);
-        FindObjectOfType<ItemAlpha>().SendCoins(money);
-        GetCoins();
-    }
-
     public void Buy(Button clicked)
     {
         clicked.interactable = false;
@@ -184,10 +198,10 @@ public class StoreFront : MonoBehaviour
         {
             items.m_eqippableItems[weaponNum].equipped = false;
             items.m_eqippableItems[temp1].equipped = true;
-            FindObjectOfType<ItemAlpha>().SendCoins(currentWeapon.cost - items.m_eqippableItems[temp1].cost);
+            items.SendCoins(currentWeapon.cost - items.m_eqippableItems[temp1].cost);
             currentWeapon = items.m_eqippableItems[temp1];
             weaponNum = temp1;
-            FindObjectOfType<ItemAlpha>().CurrentWeapon(weaponNum);
+            items.CurrentWeapon(weaponNum);
             selectedWeapon = true;
         }
 
@@ -195,10 +209,10 @@ public class StoreFront : MonoBehaviour
         {
             items.m_eqippableItems[weaponNum].equipped = false;
             items.m_eqippableItems[temp2].equipped = true;
-            FindObjectOfType<ItemAlpha>().SendCoins(currentWeapon.cost - items.m_eqippableItems[temp2].cost);
+            items.SendCoins(currentWeapon.cost - items.m_eqippableItems[temp2].cost);
             currentWeapon = items.m_eqippableItems[temp2];
             weaponNum = temp2;
-            FindObjectOfType<ItemAlpha>().CurrentWeapon(weaponNum);
+            items.CurrentWeapon(weaponNum);
             selectedWeapon = true;
         }
 
@@ -206,10 +220,10 @@ public class StoreFront : MonoBehaviour
         {
             items.m_eqippableItems[armourNum].equipped = false;
             items.m_eqippableItems[temp3].equipped = true;
-            FindObjectOfType<ItemAlpha>().SendCoins(currentArmour.cost - items.m_eqippableItems[temp3].cost);
+            items.SendCoins(currentArmour.cost - items.m_eqippableItems[temp3].cost);
             currentArmour = items.m_eqippableItems[temp3];
             armourNum = temp3;
-            FindObjectOfType<ItemAlpha>().CurrentArmour(armourNum);
+            items.CurrentArmour(armourNum);
             selectedArmour = true;
         }
 
@@ -217,10 +231,10 @@ public class StoreFront : MonoBehaviour
         {
             items.m_eqippableItems[armourNum].equipped = false;
             items.m_eqippableItems[temp4].equipped = true;
-            FindObjectOfType<ItemAlpha>().SendCoins(currentArmour.cost - items.m_eqippableItems[temp4].cost);
+            items.SendCoins(currentArmour.cost - items.m_eqippableItems[temp4].cost);
             currentArmour = items.m_eqippableItems[temp4];
             armourNum = temp4;
-            FindObjectOfType<ItemAlpha>().CurrentArmour(armourNum);
+            items.CurrentArmour(armourNum);
             selectedArmour = true;
         }
 
@@ -228,10 +242,10 @@ public class StoreFront : MonoBehaviour
         {
             items.m_useableItems[backpackNum].equipped = false;
             items.m_useableItems[temp5].equipped = true;
-            FindObjectOfType<ItemAlpha>().SendCoins(currentBackpack.cost - items.m_useableItems[temp5].cost);
+            items.SendCoins(currentBackpack.cost - items.m_useableItems[temp5].cost);
             currentBackpack = items.m_useableItems[temp5];
             backpackNum = temp5;
-            FindObjectOfType<ItemAlpha>().CurrentBackpack(backpackNum);
+            items.CurrentBackpack(backpackNum);
             selectedBackpack = true;
             option05.interactable = false;
         }
@@ -241,6 +255,73 @@ public class StoreFront : MonoBehaviour
         CheckCost(isFifth);
     }
 
+    public void Buy(int i)
+    {
+        if(i == 3)  //Rations
+        {
+            items.m_useableItems[i].curHeld++;
+        }
+
+        else if(i == 4) //Bait
+        {
+            items.m_useableItems[i].curHeld++;
+        }
+
+        else if (i == 5)    //Medicine
+        {
+            items.m_useableItems[i].curHeld++;
+        }
+
+        else if (i == 6)    //Rope
+        {
+            items.m_useableItems[i].curHeld++;
+        }
+        items.SendCoins(-items.m_useableItems[i].cost);
+        UpdateItemDisplay();
+        GetCoins();
+        CheckCost();
+        CheckCost(isFifth);
+    }
+
+    
+
+    public void SellAllJunk()
+    {
+        int money = 0;
+        for (int i = 0; i < items.m_ItemList.Capacity; i++)
+        {
+            if (items.m_ItemList[i].curHeld > 0)
+            {
+                money += (items.m_ItemList[i].curHeld * items.m_ItemList[i].cost);
+                items.m_ItemList[i].curHeld = 0;
+            }
+        }
+        items.SendCoins(money);
+        GetCoins();
+    }
+
+    public void CheckCost()
+    {
+        if (curMoney < items.m_useableItems[3].cost)
+            itemButtons[0].interactable = false;
+        else
+            itemButtons[0].interactable = true;
+
+        if (curMoney < items.m_useableItems[4].cost)
+            itemButtons[1].interactable = false;
+        else
+            itemButtons[1].interactable = true;
+
+        if (curMoney < items.m_useableItems[5].cost)
+            itemButtons[2].interactable = false;
+        else
+            itemButtons[2].interactable = true;
+
+        if (curMoney < items.m_useableItems[6].cost)
+            itemButtons[3].interactable = false;
+        else
+            itemButtons[3].interactable = true;
+    }
 
     public void CheckCost(bool backpack)
     {
@@ -340,6 +421,7 @@ public class StoreFront : MonoBehaviour
         priceCheck[7].text = items.m_eqippableItems[temp3].cost.ToString() + "GPs";
         priceCheck[8].text = items.m_eqippableItems[temp4].cost.ToString() + "GPs";
         priceCheck[9].text = items.m_useableItems[temp5].cost.ToString() + "GPs";
+        CheckCost();
     }
 
     private void GetCoins()
@@ -358,6 +440,18 @@ public class StoreFront : MonoBehaviour
 
         backpackImage.sprite = currentBackpack.displayImage;
         backpackText.text = currentBackpack.itemName;
+
+        SendToDisplay();
+    }
+
+    public void UpdateItemDisplay()
+    {
+        curRations.text = items.m_useableItems[3].curHeld.ToString();
+        curBait.text = items.m_useableItems[4].curHeld.ToString();
+        curMedicine.text = items.m_useableItems[5].curHeld.ToString();
+        curRope.text = items.m_useableItems[6].curHeld.ToString();
+
+        FindObjectOfType<InventoryDisplay>().UpdateItemsDisplay();
     }
 
     public string CheckPrice(ItemsList current, ItemsList buying)
@@ -377,18 +471,16 @@ public class StoreFront : MonoBehaviour
         return total;
     }
 
-    public void NewTown()
-    {
-        SellAllJunk();
-        GetCoins();
-        UpdateInventoryDisplay();
-        DisplayWares();
-    }
 
     public void Check()
     {
         Debug.Log(weaponNum);
         Debug.Log(armourNum);
         Debug.Log(backpackNum);
+    }
+
+    public void SendToDisplay()
+    {
+        FindObjectOfType<InventoryDisplay>().UpdateEquippedItems(currentWeapon, currentArmour, currentBackpack);
     }
 }
