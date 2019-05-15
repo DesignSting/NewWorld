@@ -27,7 +27,7 @@ public class ResultDisplay : MonoBehaviour {
     public Button choice1;
     public Button choice2;
     private bool isChoice;
-    private int choiceMade;
+    //private int choiceMade;
     //private bool isTimer;
     public float timer;
 
@@ -36,7 +36,7 @@ public class ResultDisplay : MonoBehaviour {
         if(timer > 5)
         {
             isChoice = true;
-            choiceMade = 1;
+            //choiceMade = 1;
             timer = 0;
             //isTimer = false;
         }
@@ -52,7 +52,10 @@ public class ResultDisplay : MonoBehaviour {
         currentHealth = items.CurrentHealth();
         if (choice.badChoice)
         {
-            BadResult(choice);
+            if (choice.creatureDamage && (items.ReturnBait() > 0))
+                BadResult(choice, HasBait());
+            else
+                BadResult(choice, 1);
         }
 
         else
@@ -63,6 +66,15 @@ public class ResultDisplay : MonoBehaviour {
         FindObjectOfType<InventoryDisplay>().UpdateItemsDisplay();
     }
 
+    public int HasBait()
+    {
+        return 1;
+    }
+
+    public void BaitChoice()
+    {
+
+    }
 
     private void GoodResult(ChoiceList choice)
     {
@@ -94,7 +106,7 @@ public class ResultDisplay : MonoBehaviour {
     }
 
 
-    private void BadResult(ChoiceList choice)
+    private void BadResult(ChoiceList choice, int choiceMade)
     {
         Debug.Log("Creature " + choice.creatureDamage + " & Bait " + items.ReturnBait());
         choiceMade = 1;
@@ -293,17 +305,18 @@ public class ResultDisplay : MonoBehaviour {
         resultPanel.SetActive(false);
     }
 
-    public void ButtonChoice(int i)
-    {
-        choiceMade = i;
-        isChoice = true;
-    }
+    //public void ButtonChoice(int i)
+    //{
+    //    choiceMade = i;
+    //    isChoice = true;
+    //}
     /**
      *  - Need to get the bait system working
                 - Maybe take it out just after the choice goes to result and wait for user input there
                 - Make the original BadResult take an int as well to make sure they are not being confused
         - Move the items to the top of the screen and always visible while on map screen
-        - Start populating more maps and figure out how they are going to connect to one another. This means the player can always go the wrong way and end up in bad areas. Also will mean they will need to change weapons and armour more often
+        - Start populating more maps and figure out how they are going to connect to one another.
+    This means the player can always go the wrong way and end up in bad areas. Also will mean they will need to change weapons and armour more often
         - Have the HP, Expected gold and medipacs at the bottom of the screen?
      * 
      * */

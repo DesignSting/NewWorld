@@ -47,6 +47,7 @@ public class DisplayPanel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         //throw new System.NotImplementedException();
     }
 
+
     public void IsClicked()
     {
         bool state = animator.GetBool("isOpen");
