@@ -29,11 +29,14 @@ public class MapEditor : MonoBehaviour {
 
     public Button lastClicked;
 
+    public GameObject currentMap;
+
 	// Use this for initialization
 	void Start ()
     {
         hasRiver = (river.Length != 0);
         hasCliff = (cliff.Length != 0);
+        currentMap = gameObject;
 
         //SetUpMap();
 	}
@@ -222,5 +225,4 @@ public class MapEditor : MonoBehaviour {
     {
         lastClicked = button;
     }
-
 }

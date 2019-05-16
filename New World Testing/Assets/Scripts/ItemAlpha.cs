@@ -19,6 +19,8 @@ public class ItemAlpha : MonoBehaviour {
     public int currentHealth;
     public int expCoins;
 
+    private int rationCounter;
+
      public void UpdateItems(string name, int amount)
     {
         bool isFound = false;
@@ -282,8 +284,14 @@ public class ItemAlpha : MonoBehaviour {
 
     public void NextDay()
     {
+        if(rationCounter == 7)
+        {
+            currentHealth = 0;
+        }
+
         if (m_useableItems[3].curHeld == 0)
         {
+            rationCounter++;
             CurrentHealth(-1);
         }
         else

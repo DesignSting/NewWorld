@@ -8,6 +8,7 @@ public class MapNode : MonoBehaviour
     public bool isFirst;
     public bool isLast;
     public Button[] next;
+    public GameObject nextMap;
 
     public void Start()
     {

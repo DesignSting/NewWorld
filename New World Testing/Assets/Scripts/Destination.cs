@@ -39,7 +39,6 @@ public class Destination : MonoBehaviour {
         choice3.GetComponentInChildren<Text>().text = choice3.GetComponent<ChoiceAlpha>().choiceTitle;
 
         FindObjectOfType<ResultDisplay>().LastClicked(GetComponent<Button>());
-        //Cloud();
     }
 
     public void Cloud()
@@ -48,10 +47,5 @@ public class Destination : MonoBehaviour {
         {
             thisButton.image = test;
         }
-    }
-
-    public void Mask()
-    {
-        
     }
 }

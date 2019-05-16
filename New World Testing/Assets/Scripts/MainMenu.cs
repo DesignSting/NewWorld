@@ -6,37 +6,17 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour {
 
-    public GameObject mapTest;
+    public GameObject currentMap;
     public GameObject inventoryPanel;
     public GameObject townScreenPanel;
     public GameObject mainMenuPanel;
 
-    //public float timer;
-    //public bool mouseOver;
 
-    //private void Update()
-    //{
-    //    if (inventoryPanel.activeInHierarchy)
-    //    {
-    //        if (inventoryPanel.GetComponent<Animator>().GetBool("isOpen"))
-    //        {
-    //            timer += Time.deltaTime;
-    //        }
-    //        if (timer > 3 && !mouseOver)
-    //        {
-    //            inventoryPanel.GetComponent<Animator>().SetBool("isOpen", false);
-    //            timer = 0;
-    //        }
-    //    }
-
-    //}
 
     public void NewGame()
     {
         FindObjectOfType<ItemAlpha>().CheckEquipped();
         FindObjectOfType<ItemAlpha>().NewGame();
-        //inventoryPanel.SetActive(true);
-        //inventoryPanel.GetComponent<Animator>().SetBool("isOpen", true);
         mainMenuPanel.SetActive(false);
         townScreenPanel.SetActive(true);
         FindObjectOfType<StoreFront>().SendToDisplay();
@@ -47,10 +27,9 @@ public class MainMenu : MonoBehaviour {
     public void StartGame()
     {
         townScreenPanel.SetActive(false);
-        mapTest.SetActive(true);
+        currentMap.SetActive(true);
         inventoryPanel.SetActive(true);
         FindObjectOfType<StoreFront>().SendToDisplay();
-        //FindObjectOfType<InventoryDisplay>().UpdateEquippedItems();
         FindObjectOfType<InventoryDisplay>().UpdateItemsDisplay();
         FindObjectOfType<MapEditor>().SetUpMap();
     }
@@ -68,13 +47,15 @@ public class MainMenu : MonoBehaviour {
 
     public void MainMenuReturn()
     {
-        mapTest.SetActive(false);
+        currentMap.SetActive(false);
         mainMenuPanel.SetActive(true);
     }
 
-    public void NewTown()
+    public void NewTown(GameObject nextMap)
     {
-        mapTest.SetActive(false);
+
+        currentMap.SetActive(false);
+        currentMap = nextMap;
         townScreenPanel.SetActive(true);
         inventoryPanel.GetComponent<Animator>().SetBool("isOpen", true);
         FindObjectOfType<StoreFront>().NewTown();
@@ -89,8 +70,13 @@ public class MainMenu : MonoBehaviour {
 
     public void ToMainMenu()
     {
-        mapTest.SetActive(false);
+        currentMap.SetActive(false);
         inventoryPanel.SetActive(false);
         mainMenuPanel.SetActive(true);
+    }
+
+    public void ShowMap()
+    {
+        currentMap.SetActive(true);
     }
 }

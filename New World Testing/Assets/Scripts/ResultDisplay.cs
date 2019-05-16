@@ -24,22 +24,33 @@ public class ResultDisplay : MonoBehaviour {
 
     private int currentHealth;
 
-    public Button choice1;
-    public Button choice2;
+    public Button baitButton;
+    public Button fightButton;
     private bool isChoice;
     //private int choiceMade;
-    //private bool isTimer;
+    private bool isTimer;
     public float timer;
+    private ChoiceList choiceMade;
+    public Text countdownText;
 
     private void Update()
     {
-        if(timer > 5)
+        if(isTimer)
         {
-            isChoice = true;
-            //choiceMade = 1;
-            timer = 0;
-            //isTimer = false;
+            timer -= Time.deltaTime;
+            countdownText.text = timer.ToString("F0");
+
+            if (timer < 0)
+            {
+                countdownText.gameObject.SetActive(false);
+                baitButton.gameObject.SetActive(false);
+                fightButton.gameObject.SetActive(false);
+                isTimer = false;
+                timer = 5;
+                BadResult(choiceMade, 1);
+            }
         }
+
     }
 
 
@@ -50,10 +61,21 @@ public class ResultDisplay : MonoBehaviour {
         storyBox.text = choice.textToDisplay;
         resultPanel.SetActive(true);
         currentHealth = items.CurrentHealth();
+        timer = 5;
+        if (currentHealth == 0)
+        {
+            Death("You stumbled, you tired but in the end you have died from a lack of food", "Even the dogs didn't want what was left");
+        }
         if (choice.badChoice)
         {
             if (choice.creatureDamage && (items.ReturnBait() > 0))
-                BadResult(choice, HasBait());
+            {
+                isTimer = true;
+                countdownText.gameObject.SetActive(true);
+                baitButton.gameObject.SetActive(true);
+                fightButton.gameObject.SetActive(true);
+                choiceMade = choice;
+            }
             else
                 BadResult(choice, 1);
         }
@@ -66,15 +88,15 @@ public class ResultDisplay : MonoBehaviour {
         FindObjectOfType<InventoryDisplay>().UpdateItemsDisplay();
     }
 
-    public int HasBait()
+    public void HasBait(int i)
     {
-        return 1;
+        baitButton.gameObject.SetActive(false);
+        fightButton.gameObject.SetActive(false);
+        countdownText.gameObject.SetActive(false);
+        BadResult(choiceMade, i);
+        
     }
 
-    public void BaitChoice()
-    {
-
-    }
 
     private void GoodResult(ChoiceList choice)
     {
@@ -108,28 +130,6 @@ public class ResultDisplay : MonoBehaviour {
 
     private void BadResult(ChoiceList choice, int choiceMade)
     {
-        Debug.Log("Creature " + choice.creatureDamage + " & Bait " + items.ReturnBait());
-        choiceMade = 1;
-        //if((choice.creatureDamage) && (items.ReturnBait() > 0))
-        //{
-        //    encounterBox.enabled = true;
-        //    encounterBox.text = "Would you use one of your baits? Or just attack?!?";
-        //    positiveBox.text = "You only have " + currentHealth + "hp left!";
-        //    choice1.gameObject.SetActive(true);
-        //    choice2.gameObject.SetActive(true);
-        //    //isTimer = true;
-
-        //    do
-        //    {
-        //        timer += Time.deltaTime;
-        //    }
-        //    while (!isChoice);
-        //    isChoice = false;
-        //    //isTimer = false;
-        //    timer = 0;
-        //    choice1.gameObject.SetActive(false);
-        //    choice2.gameObject.SetActive(false);
-        //}
         if (choiceMade == 1)
         {
             int dmgTaken = 0;
@@ -212,7 +212,7 @@ public class ResultDisplay : MonoBehaviour {
         if(choiceMade == 2)
         {
             encounterBox.text = "";
-            storyBox.text = "Throwing the meat to the savaged your quickly make your escape while they fight over the food. /n Nice Move";
+            storyBox.text = "Throwing the meat you the creatures you quickly make your escape, unnoticed. \n \n Nice Move!";
             items.RemoveItem("Bait", -1);
         }
     }
@@ -255,7 +255,8 @@ public class ResultDisplay : MonoBehaviour {
     {
         if (lastClicked.GetComponent<MapNode>().isLast)
         {
-            FindObjectOfType<MainMenu>().NewTown();
+            map = lastClicked.GetComponent<MapNode>().nextMap;
+            FindObjectOfType<MainMenu>().NewTown(map);
         }
         else
         {
@@ -289,6 +290,7 @@ public class ResultDisplay : MonoBehaviour {
         deathBox.text = deathString;
     }
 
+
     public void ResetPanel()
     {
         storyBox.text = "";
@@ -305,11 +307,10 @@ public class ResultDisplay : MonoBehaviour {
         resultPanel.SetActive(false);
     }
 
-    //public void ButtonChoice(int i)
-    //{
-    //    choiceMade = i;
-    //    isChoice = true;
-    //}
+    public void ButtonChoice()
+    {
+        Debug.Log("Button " + name);
+    }
     /**
      *  - Need to get the bait system working
                 - Maybe take it out just after the choice goes to result and wait for user input there

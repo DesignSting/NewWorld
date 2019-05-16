@@ -44,10 +44,6 @@ public class SaveLoad : MonoBehaviour {
         currentCoins = PlayerPrefs.GetInt("currentCoins_CharSlot" + saveSlot);
         currentHealth = PlayerPrefs.GetInt("currentHealth_CharSlot" + saveSlot);
 
-        Debug.Log(currentWeapon);
-        Debug.Log(currentArmour);
-        Debug.Log(currentBackpack);
-
         items.LoadSaveGame(currentWeapon,currentArmour,currentBackpack,currentCoins,currentHealth);
         GetComponent<MainMenu>().LoadGame();
         //GetComponent<MainMenu>().NewTown();
