@@ -26,8 +26,6 @@ public class ResultDisplay : MonoBehaviour {
 
     public Button baitButton;
     public Button fightButton;
-    private bool isChoice;
-    //private int choiceMade;
     private bool isTimer;
     public float timer;
     private ChoiceList choiceMade;

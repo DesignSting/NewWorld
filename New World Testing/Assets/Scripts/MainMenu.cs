@@ -12,7 +12,34 @@ public class MainMenu : MonoBehaviour {
     public GameObject mainMenuPanel;
 
 
+    public GameObject pausePanel;
+    public float timer;
+    public bool isTiming;
 
+    private void Update()
+    {
+        if(isTiming)
+        {
+            timer += Time.deltaTime;
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (currentMap.activeInHierarchy)
+            {
+                isTiming = true;
+                pausePanel.SetActive(true);
+                currentMap.SetActive(false);
+            }
+            if (pausePanel.activeInHierarchy & timer > 0.2)
+            {
+                pausePanel.SetActive(false);
+                currentMap.SetActive(true);
+                timer = 0;
+                isTiming = false;
+            }
+        }
+
+    }
     public void NewGame()
     {
         FindObjectOfType<ItemAlpha>().CheckEquipped();
@@ -78,5 +105,15 @@ public class MainMenu : MonoBehaviour {
     public void ShowMap()
     {
         currentMap.SetActive(true);
+    }
+
+    public void PauseMenu()
+    {
+        Debug.Log("THis is the pause menu");
+    }
+
+    public void BackButton()
+    {
+
     }
 }
